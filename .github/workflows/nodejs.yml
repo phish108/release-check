@@ -20,46 +20,6 @@ jobs:
         node-version: 14
     - run: npm ci
     - run: npm run lint
-
-  test:
-    needs: verify
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-
-    - run: | 
-        npm ci
-        npm run package
-        git commit -m "updated dist file" -a 
-
-    - name: Use Node.js 14
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14
-
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-
-    - id: checker
-      uses: phish108/release-check@1.0.3
-    
-    - uses: phish108/release-check@main
-      id: draftversion
-
-    - name: verify Tags
-      run: |
-        if [ "${{ steps.checker.outputs.proceed }}" != "${{ steps.draftversion.outputs.proceed }}" ]
-        then
-          exit 1
-        fi
  
   verify: 
     needs: lint
@@ -78,7 +38,7 @@ jobs:
         run: echo OK
 
   build:
-    needs: test
+    needs: verify
 
     if: github.actor == 'phish108' || startsWith(github.actor, 'dependabot')
     runs-on: ubuntu-latest

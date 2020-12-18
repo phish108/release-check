@@ -26,11 +26,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:
+    steps:    
     - id: checker
       uses: phish108/release-check@1.0.3
     
-    - uses: phish108/release-check@${{ sha }}
+    - uses: phish108/release-check@main
       id: draftversion
 
     - name: verify Tags

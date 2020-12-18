@@ -22,7 +22,7 @@ jobs:
     - run: npm run lint
 
   test:
-    needs: lint
+    needs: verify
 
     runs-on: ubuntu-latest
 
@@ -62,7 +62,7 @@ jobs:
         fi
  
   verify: 
-    needs: test
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: check changes
@@ -78,7 +78,7 @@ jobs:
         run: echo OK
 
   build:
-    needs: verify
+    needs: test
 
     if: github.actor == 'phish108' || startsWith(github.actor, 'dependabot')
     runs-on: ubuntu-latest

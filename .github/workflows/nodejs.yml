@@ -46,6 +46,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
 
     - id: checker
       uses: phish108/release-check@1.0.3
@@ -112,6 +113,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
     
     - uses: phish108/autotag-action@1.1.29
       with:

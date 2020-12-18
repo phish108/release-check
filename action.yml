@@ -1,0 +1,20 @@
+name: 'Release Check'
+author: 'phish108'
+description: 'Check if changes are relevant for a release'
+branding:
+  icon: thumbs-up
+  color: green
+inputs:
+  protected-paths:
+    description: 'list of protected paths, these paths are NOT relevant for releases'
+    required: false
+outputs:
+  proceed: # id of output
+    description: 'If true, the changes appear to affect the business logic and it is safe to proceed'
+  hold_development:
+    description: 'If true, the changes affect only development dependencies'
+  hold_protected:
+    description: 'If true, the changes affect only protected files and directories'
+runs:
+  using: node12
+  main: 'dist/index.js'

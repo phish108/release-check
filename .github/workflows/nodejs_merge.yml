@@ -34,9 +34,28 @@ jobs:
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         MERGE_LABELS: ""
-
-  verify: 
+        
+  test:
     needs: merge
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - id: checker
+      uses: phish108/release-check@1.0.3
+    
+    - uses: phish108/release-check@main
+      id: draftversion
+
+    - name: verify Tags
+      run: |
+        if [ "${{ steps.checker.outputs.proceed }}" != "${{ steps.draftversion.outputs.proceed }}" ]
+        then
+          exit 1
+        fi
+ 
+  verify: 
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: check changes

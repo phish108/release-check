@@ -55,7 +55,7 @@ jobs:
         node-version: 14
     
     - id: tagger
-      uses: phish108/autotag-action@1.1.29
+      uses: phish108/autotag-action@1.1.26
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         dry-run: 'TRUE'
@@ -75,6 +75,6 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
     
-    - uses: phish108/autotag-action@1.1.29
+    - uses: phish108/autotag-action@1.1.26
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}

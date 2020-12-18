@@ -29,7 +29,9 @@ async function action() {
 
     const protected_extra = core.getInput("protected-paths", {required: false});
 
-    const protected_paths = protected_defaults.concat(protected_extra || []);
+    const protected_array = protected_extra ? protected_extra.split(/[\s\n\r]+/) : [];
+
+    const protected_paths = protected_defaults.concat(protected_array);
 
     // check normal protected files
     const hold_protected = files

@@ -74,6 +74,9 @@ async function action() {
         core.info(`changed other dependencies ${ isotherChange }`);
     }
 
+    core.info(`hold protected: ${ hold_protected && isotherChange === 0 }`);
+    core.info(`hold development: ${ isdevChange > 0 && isotherChange === 0 }`);
+
     core.setOutput("hold_protected", hold_protected && isotherChange === 0);
 
     const hold_development = isdevChange > 0 && isotherChange === 0;

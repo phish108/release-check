@@ -30,7 +30,7 @@ jobs:
     - id: checker
       uses: phish108/release-check@1.0.3
     
-    - uses: phish108/release-check@${{ github.sha }}
+    - uses: phish108/release-check@${{ sha }}
       id: draftversion
 
     - name: verify Tags

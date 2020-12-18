@@ -67,19 +67,20 @@ async function action() {
         core.info(`changed other dependencies ${ isotherChange }`);
     }
 
-    core.info(`hold protected: ${ hold_protected && isotherChange === 0 }`);
-    core.info(`hold development: ${ isdevChange > 0 && isotherChange === 0 }`);
+    const res_protected = hold_protected && isotherChange === 0;
+    const res_development = isdevChange > 0 && isotherChange === 0;
 
-    core.setOutput("hold_protected", hold_protected && isotherChange === 0);
+    core.info(`hold protected: ${ res_protected }`);
+    core.info(`hold development: ${ res_development }`);
 
-    const hold_development = isdevChange > 0 && isotherChange === 0;
+    core.setOutput("hold_protected", res_protected);
 
-    if (hold_development) {
+    if (res_development) {
         core.info("is dev only change. HOLD!");
     }
 
-    core.setOutput("hold_development", hold_development);
-    core.setOutput("proceed", !(hold_protected || hold_development));
+    core.setOutput("hold_development", res_development);
+    core.setOutput("proceed", !(res_protected || res_development));
 }
 
 action()

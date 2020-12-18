@@ -2,16 +2,16 @@
 
 Check if a push or pull request should trigger a release.
 
-This action is a handy helper for checking if a change should lead to a release. The action checks if the changes affect the code base of the business logic or if only package logistics are affected. The action helps to keep unnecessary releases low if one uses automatic releases through github actions. This action is designed to work with `dependabot` updates
+This action is a handy helper for checking if a change should lead to a release. The action checks if the changes affect the code base of the business logic or if only package logistics are affected. The action helps to keep unnecessary releases low if one uses automatic releases through github actions. This action is designed to work with `dependabot` updates. It aims to avoid extra releases when only the logistics have changed but not the actual business logic.
 
 The `release-check` answers two questions. 
 
 1. Have changed only files in protected paths?
 2. Have changed only development dependencies?
 
-If the answers to these questions are true, then no release is necessary.
+If the answers to these questions are true, then no release is necessary. Development dependencies are currently only checked against JavaScript `package.json` objects.
 
-`release-check` uses [`Octokit`](https://octokit.github.io/rest.js) for comparing the changes. You don't need to check out the repository.
+`release-check` uses [`Octokit`](https://octokit.github.io/rest.js) for comparing the changes. There is no need to checkout the repository.
 
 The default protected paths are: 
 
@@ -46,6 +46,8 @@ Boolean: is set to true, if the changes affect only changes in protected paths. 
 
 ## Example Usage
 
+Basic usage
+
 ```
 name: Release Action
 
@@ -60,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - id: release
-      uses: phish108/check-release@1.0.0
+      uses: phish108/check-release@1.0.3
       with: 
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -70,4 +72,31 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
--END
+Advanced usage
+
+```
+name: Release Action
+
+on:
+- push
+- pull_request:
+    branches: 
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+    - id: release
+      uses: phish108/check-release@1.0.3
+      with: 
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        protected-paths: | 
+          README.md
+          .eslintrc
+
+    - if: ${{ steps.release.outputs.proceed }}
+      uses: phish108/autotag-action@1.1.27
+      with: 
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+```

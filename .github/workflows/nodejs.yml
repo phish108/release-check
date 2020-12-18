@@ -6,7 +6,8 @@ name: Master Integration
 on:
   push:
     branches: 
-    - master 
+    - main
+    - master
 
 jobs:
   lint:

@@ -30,7 +30,7 @@ jobs:
     - id: checker
       uses: phish108/release-check@1.0.3
     
-    - uses: phish108/release-check@master
+    - uses: phish108/release-check@main
       id: draftversion
 
     - name: verify Tags

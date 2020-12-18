@@ -6,7 +6,7 @@ module.exports =
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 const core   = __webpack_require__(186);
-const github = __webpack_require__(438);
+const githubAction = __webpack_require__(438);
 
 const protected_defaults = [
     ".github/",
@@ -16,9 +16,13 @@ const protected_defaults = [
 ];
 
 async function action() {
-    const changeLog = await github.request(github.context.payload.repository.compare_url, {
-        base: github.context.payload.before,
-        head: github.context.payload.after
+    const token = core.getInput('github-token', {required: true})
+
+    const github = new githubAction.getOctokit(token);
+
+    const changeLog = await github.request(githubAction.context.payload.repository.compare_url, {
+        base: githubAction.context.payload.before,
+        head: githubAction.context.payload.after
     });
 
     const files = changeLog.data.files.map(file => file.filename);

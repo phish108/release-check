@@ -1,5 +1,5 @@
 const core   = require("@actions/core");
-const github = require("@actions/github");
+const githubAction = require("@actions/github");
 
 const protected_defaults = [
     ".github/",
@@ -9,9 +9,13 @@ const protected_defaults = [
 ];
 
 async function action() {
-    const changeLog = await github.request(github.context.payload.repository.compare_url, {
-        base: github.context.payload.before,
-        head: github.context.payload.after
+    const token = core.getInput('github-token', {required: true})
+
+    const github = new githubAction.getOctokit(token);
+
+    const changeLog = await github.request(githubAction.context.payload.repository.compare_url, {
+        base: githubAction.context.payload.before,
+        head: githubAction.context.payload.after
     });
 
     const files = changeLog.data.files.map(file => file.filename);

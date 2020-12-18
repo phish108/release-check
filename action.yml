@@ -6,6 +6,7 @@ branding:
   color: green
 inputs:
   github-token:
+    description: "the token"
     default: ${{ github.token }}
     required: false
   protected-paths:

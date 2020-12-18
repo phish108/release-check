@@ -70,10 +70,10 @@ jobs:
         uses: phish108/release-check@main
       - name: only dev changes
         run: exit 1
-        if: ${{ steps.release.outputs.hold_development }}
+        if: ${{ steps.release.outputs.hold_development == "false" }}
       - name: only protected changes
         run: exit 1
-        if: ${{ steps.release.outputs.hold_protected }}
+        if: ${{ steps.release.outputs.hold_protected == "false" }}
       - name: Proceed to release
         run: echo OK
 

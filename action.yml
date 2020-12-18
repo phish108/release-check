@@ -6,7 +6,8 @@ branding:
   color: green
 inputs:
   github-token:
-    required: true
+    default: ${{ github.token }}
+    required: false
   protected-paths:
     description: 'list of protected paths, these paths are NOT relevant for releases'
     required: false

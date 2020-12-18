@@ -67,7 +67,7 @@ jobs:
     steps:
       - name: check changes
         id: release
-        uses: phish108/release-check@1.0.3
+        uses: phish108/release-check@main
       - name: only dev changes
         run: exit 1
         if: ${{ steps.release.outputs.hold_development }}

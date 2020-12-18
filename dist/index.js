@@ -16,7 +16,7 @@ const protected_defaults = [
 ];
 
 async function action() {
-    const token = core.getInput('github-token', {required: true})
+    const token = core.getInput("github-token", {required: true});
 
     const github = new githubAction.getOctokit(token);
 

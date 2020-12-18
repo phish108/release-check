@@ -1,0 +1,101 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14
+    - run: npm ci
+    - run: npm run lint
+    
+  merge: 
+    needs: lint
+    if: github.actor == 'phish108' ||  startsWith(github.actor, 'dependabot')
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: automerge
+      uses: "pascalgn/automerge-action@5ad9f38505afff96c6ad2d1c1bf2775135a7d309"
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        MERGE_LABELS: ""
+
+  verify: 
+    needs: merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: check changes
+        id: release
+        uses: phish108/release-check@1.0.3
+        # with:
+        #   protected-paths: |  
+        #     LICENSE 
+        #     .eslintrc
+
+      - name: only dev changes
+        run: exit 1
+        if: ${{ steps.release.outputs.hold_development }}
+      - name: only protected changes
+        run: exit 1
+        if: ${{ steps.release.outputs.hold_protected }}
+      - name: Proceed to release
+        run: echo OK
+
+  build:
+    needs: verify
+    if: github.actor == 'phish108' || startsWith(github.actor, 'dependabot')
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          ref: master
+    - run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+
+    - name: Setup Node.js 
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14
+    
+    - id: tagger
+      uses: phish108/autotag-action@1.1.29
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
+        dry-run: 'TRUE'
+        
+    - run: | 
+        npm ci
+        npm run package
+        npm --no-git-tag-version --allow-same-version version ${{ steps.tagger.outputs.new-tag }} 
+        sed -ire "s/phish108\/autotag-action@[0-9]*\.[0-9]*\.[0-9]*/phish108\/autotag-action@${{ steps.tagger.outputs.new-tag }}/g" README.md
+        git commit -m "updated dist file for $GITSHA" -a 
+      env:
+        GITSHA: ${{ github.sha }}
+
+    # very risky ... 
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - uses: phish108/autotag-action@1.1.29
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master

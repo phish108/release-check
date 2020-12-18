@@ -33,6 +33,8 @@ async function action() {
 
     const protected_paths = protected_defaults.concat(protected_array);
 
+    core.info(JSON.stringify(protected_paths));
+
     // check normal protected files
     const hold_protected = files
         .map((file) => protected_paths

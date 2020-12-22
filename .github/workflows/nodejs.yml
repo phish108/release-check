@@ -56,28 +56,21 @@ jobs:
       with:
         node-version: 12
     
-    - id: tagger
-      if: ${{ steps.release.outputs.proceed }}
-      uses: phish108/autotag-action@1.1.31
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        dry-run: 'TRUE'
-
     - run: | 
         npm ci
         npm run package
-        npm --no-git-tag-version --allow-same-version version ${{ steps.tagger.outputs.new-tag }} 
-        sed -ire "s/phish108\/release-check@[0-9]*\.[0-9]*\.[0-9]*/phish108\/release-check@${{ steps.tagger.outputs.new-tag }}/g" README.md
-        git commit -m "updated release files for $GITSHA" -a 
+        git commit -m "updated package file for $GITSHA" -a 
       if: ${{ steps.release.outputs.proceed }}
       env:
         GITSHA: ${{ github.sha }}
+
     - name: Push changes
       if: ${{ steps.release.outputs.proceed }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
+  
   release:
     needs: build
 
@@ -93,7 +86,38 @@ jobs:
       id: releaseMain
       uses: phish108/release-check@main
 
+    - id: tagger
+      if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed }}
+      uses: phish108/autotag-action@1.1.31
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        dry-run: 'TRUE'
+
+    - uses: actions/checkout@v2
+
+    - run: |
+        git config --local user.email "cpglahn@gmail.com"
+        git config --local user.name "Christian Glahn"
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    
+    - run: | 
+        npm ci
+        npm --no-git-tag-version --allow-same-version version ${{ steps.tagger.outputs.new-tag }} 
+        sed -ire "s/phish108\/release-check@[0-9]*\.[0-9]*\.[0-9]*/phish108\/release-check@${{ steps.tagger.outputs.new-tag }}/g" README.md
+        git commit -m "updated release files for $GITSHA" -a 
+      if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed }}
+      env:
+        GITSHA: ${{ github.sha }}
+    - name: Push changes
+      if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
     - uses: phish108/autotag-action@1.1.31
-      if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed}}
+      if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -58,15 +58,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/github-script@v3
-      with: 
-        script: | 
-           core.info(JSON.stringify(context, 2));
-    
     - name: check changes Dev
       id: release
-      uses: phish108/release-check@main
-    
+      uses: phish108/release-check@1.0.4
+
     - uses: actions/checkout@v2
     - run: |
         git config --local user.email "cpglahn@gmail.com"
@@ -75,7 +70,7 @@ jobs:
     - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:
-        node-version: 12
+        node-version: 12 
     
     - id: tagger
       if: ${{ steps.release.outputs.proceed }}

@@ -8,7 +8,7 @@ const protected_defaults = [
 function prepareProtectedPaths(extraString) {
     let extraPaths = [];
 
-    if (extraString) {
+    if (typeof extraString === "string") {
         extraPaths = extraString.split(/[\s\n\r]+/);
     }
 
@@ -116,8 +116,16 @@ async function checkCommits(github, context, extras) {
     const files = changeLog.data.files
         .map(file => file.filename);
 
+    let protectedExtra = "";
+
+    if ( extras && 
+         extras.protected_extra && 
+         typeof extras.protected_extra === "string" ) {
+        protectedExtra = extras.protected_extra;
+    }
+
     const protected_paths = prepareProtectedPaths(protected_defaults,
-                                                  extras.protected_extra);
+                                                  protectedExtra);
 
     // check normal protected files
     let hold_protected = checkOnlyPaths(files,

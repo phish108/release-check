@@ -24,6 +24,8 @@ The default protected paths are:
 
 It is possible to add additional paths through the `protected-paths` input. 
 
+Currently only npm dependencies are checked. 
+
 ## Inputs
 
 ### `protected-paths`

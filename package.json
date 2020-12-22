@@ -11,11 +11,11 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "1.2.6",
-    "@actions/github": "4.0.1"
+    "@actions/github": "4.0.2"
   },
   "devDependencies": {
     "@vercel/ncc": "0.26.0",
-    "babel-eslint": "10.1.1",
+    "babel-eslint": "10.1.2",
     "eslint": "7.14.0",
     "eslint-plugin-babel": "5.3.1"
   }

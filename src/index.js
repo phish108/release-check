@@ -6,7 +6,7 @@ async function action() {
     const token = core.getInput("github-token", {required: true});
     const protected_extra = core.getInput("protected-paths", {required: false});
 
-    core.info("start");
+    // core.info("start");
 
     const github = githubAction.getOctokit(token);
 

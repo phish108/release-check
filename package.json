@@ -1,0 +1,22 @@
+{
+  "name": "release-check",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "homepage": "https://github.com/phish108/release-check",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phish108/release-check.git"
+  },
+  "author": "Christian Glahn <phish108@mobinaut.io>",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "1.2.6",
+    "@actions/github": "4.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "0.26.0",
+    "babel-eslint": "10.1.0",
+    "eslint": "7.14.0",
+    "eslint-plugin-babel": "5.3.1"
+  }
+}

@@ -118,8 +118,8 @@ async function checkCommits(github, context, extras) {
 
     let protectedExtra = "";
 
-    if ( extras && 
-         extras.protected_extra && 
+    if ( extras &&
+         extras.protected_extra &&
          typeof extras.protected_extra === "string" ) {
         protectedExtra = extras.protected_extra;
     }

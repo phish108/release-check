@@ -86,7 +86,7 @@ jobs:
 
     steps:
     - name: check changes
-      id: releaseMain
+      id: release
       uses: phish108/release-check@1.0.4
 
     - name: check changes MAIN

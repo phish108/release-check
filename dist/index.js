@@ -5880,6 +5880,10 @@ async function checkCommits(github, context, extras) {
     const owner = context.owner;
     const repo = context.repo;
 
+    console.log(`owner ${owner} repo ${repo}`);
+    console.log(`before${base}`);
+    console.log(`after ${head}`);
+
     const changeLog = await github.repos.compareCommits({
         owner,
         repo,

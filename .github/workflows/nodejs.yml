@@ -53,12 +53,15 @@ jobs:
           LICENSE
           action.yml
 
+    - run: | 
+        echo "proceed!"
+      if: ${{ steps.release.outputs.proceed }}
     - uses: actions/checkout@v2
 
     - run: |
         git config --local user.email "cpglahn@gmail.com"
         git config --local user.name "Christian Glahn"
-        
+
     - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:

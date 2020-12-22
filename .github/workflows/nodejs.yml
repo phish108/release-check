@@ -45,7 +45,7 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.8
+      uses: phish108/release-check@1.0.9
       with:
         protected-paths: | 
           README.md
@@ -91,7 +91,7 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.8
+      uses: phish108/release-check@1.0.9
       with:
         protected-paths: | 
           README.md

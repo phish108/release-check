@@ -6,10 +6,9 @@ async function action() {
     const token = core.getInput("github-token", {required: true});
     const protected_extra = core.getInput("protected-paths", {required: false});
 
-    const github = new githubAction.getOctokit(token);
+    const github = githubAction.getOctokit(token);
 
     const result = await checkCommits(github,
-                                      core,
                                       githubAction.context,
                                       {protected_extra});
 

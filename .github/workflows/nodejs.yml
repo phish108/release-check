@@ -45,12 +45,20 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.4
-    
+      uses: phish108/release-check@1.0.8
+      with:
+        protected-paths: | 
+          README.md
+          .eslintrc
+          LICENSE
+          action.yml
+
     - uses: actions/checkout@v2
+
     - run: |
         git config --local user.email "cpglahn@gmail.com"
         git config --local user.name "Christian Glahn"
+        
     - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:
@@ -80,11 +88,23 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.4
+      uses: phish108/release-check@1.0.8
+      with:
+        protected-paths: | 
+          README.md
+          .eslintrc
+          LICENSE
+          action.yml
 
     - name: check changes MAIN
       id: releaseMain
       uses: phish108/release-check@main
+      with:
+        protected-paths: | 
+          README.md
+          .eslintrc
+          LICENSE
+          action.yml
 
     - id: tagger
       if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed }}
@@ -98,6 +118,7 @@ jobs:
     - run: |
         git config --local user.email "cpglahn@gmail.com"
         git config --local user.name "Christian Glahn"
+
     - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:
@@ -112,12 +133,14 @@ jobs:
       if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed }}
       env:
         GITSHA: ${{ github.sha }}
+
     - name: Push changes
       if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
+
     - uses: phish108/autotag-action@1.1.31
       if: ${{ steps.release.outputs.proceed && steps.releaseMain.outputs.proceed }}
       with:

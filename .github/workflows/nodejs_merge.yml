@@ -60,7 +60,7 @@ jobs:
     steps:
     - name: check changes Dev
       id: release
-      uses: phish108/release-check@1.0.4
+      uses: phish108/release-check@1.0.5
 
     - uses: actions/checkout@v2
     - run: |

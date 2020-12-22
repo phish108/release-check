@@ -51,7 +51,6 @@ jobs:
     - run: |
         git config --local user.email "cpglahn@gmail.com"
         git config --local user.name "Christian Glahn"
-
     - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:
@@ -73,7 +72,6 @@ jobs:
       if: ${{ steps.release.outputs.proceed }}
       env:
         GITSHA: ${{ github.sha }}
-
     - name: Push changes
       if: ${{ steps.release.outputs.proceed }}
       uses: ad-m/github-push-action@master
@@ -85,3 +83,4 @@ jobs:
       if: ${{ steps.release.outputs.proceed }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        

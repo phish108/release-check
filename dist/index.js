@@ -5967,6 +5967,7 @@ async function action() {
 
     core.info(`hold protected: ${ result.hold_protected }`);
     core.info(`hold development: ${ result.hold_development }`);
+    core.info(`proceed: ${ result.proceed }`);
 
     core.setOutput("hold_protected", result.hold_protected);
     core.setOutput("hold_development", result.hold_development);

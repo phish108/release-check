@@ -20,41 +20,45 @@ jobs:
         node-version: 14
     - run: npm ci
     - run: npm run lint
- 
-  verify: 
+
+  test: 
     needs: lint
     runs-on: ubuntu-latest
     steps:
-      - name: check changes
-        id: release
-        uses: phish108/release-check@main
-      - name: only dev changes
-        run: exit 1
-        if: ${{ steps.release.outputs.hold_development == 'true' }}
-      - name: only protected changes
-        run: exit 1
-        if: ${{ steps.release.outputs.hold_protected == 'true' }}
-      - name: Proceed to release
-        run: echo OK
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - run: npm ci
+    - run: npm test
+      env:
+        CI: "true"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
-    needs: verify
+    needs: test
 
     if: github.actor == 'phish108' || startsWith(github.actor, 'dependabot')
     runs-on: ubuntu-latest
 
     steps:
+    - name: check changes Dev
+      id: release
+      uses: phish108/release-check@main
+    
     - uses: actions/checkout@v2
     - run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
 
-    - name: Use Node.js 14
+    - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:
-        node-version: 14
+        node-version: 12
     
     - id: tagger
+      if: ${{ steps.release.outputs.proceed }}
       uses: phish108/autotag-action@1.1.31
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -66,15 +70,18 @@ jobs:
         npm --no-git-tag-version --allow-same-version version ${{ steps.tagger.outputs.new-tag }} 
         sed -ire "s/phish108\/release-check@[0-9]*\.[0-9]*\.[0-9]*/phish108\/release-check@${{ steps.tagger.outputs.new-tag }}/g" README.md
         git commit -m "updated release files for $GITSHA" -a 
+      if: ${{ steps.release.outputs.proceed }}
       env:
         GITSHA: ${{ github.sha }}
 
     - name: Push changes
+      if: ${{ steps.release.outputs.proceed }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
     
     - uses: phish108/autotag-action@1.1.31
+      if: ${{ steps.release.outputs.proceed }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}

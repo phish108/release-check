@@ -11,6 +11,7 @@ on:
 
 jobs:
   lint:
+    if: github.actor == 'phish108' ||  startsWith(github.actor, 'dependabot')
     runs-on: ubuntu-latest
     
     steps:
@@ -24,6 +25,8 @@ jobs:
   test: 
     needs: lint
     runs-on: ubuntu-latest
+    if: github.actor == 'phish108' ||  startsWith(github.actor, 'dependabot')
+
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js 12

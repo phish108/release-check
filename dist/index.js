@@ -5881,6 +5881,7 @@ async function checkCommits(github, context, extras) {
     const repo = context.repo.name;
 
     console.log(JSON.stringify(context, null, "  "));
+    console.log(JSON.stringify(repo, null, "  "));
     console.log(`owner ${owner} repo ${repo}`);
     console.log(`before ${base}`);
     console.log(`after ${head}`);

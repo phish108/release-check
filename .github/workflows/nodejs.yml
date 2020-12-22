@@ -104,6 +104,7 @@ jobs:
         node-version: 12
     
     - run: | 
+        git fetch
         npm ci
         npm --no-git-tag-version --allow-same-version version ${{ steps.tagger.outputs.new-tag }} 
         sed -ire "s/phish108\/release-check@[0-9]*\.[0-9]*\.[0-9]*/phish108\/release-check@${{ steps.tagger.outputs.new-tag }}/g" README.md

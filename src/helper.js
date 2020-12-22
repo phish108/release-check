@@ -103,8 +103,8 @@ function checkChangesOnlyInDevDependencies(diff, packageJSON) {
 async function checkCommits(github, context, extras) {
     const base = context.payload.before;
     const head = context.payload.after;
-    const owner = context.owner;
-    const repo = context.repo;
+    const owner = context.repo.owner.name;
+    const repo = context.repo.name;
 
     console.log(JSON.stringify(context, null, "  "));
     console.log(`owner ${owner} repo ${repo}`);

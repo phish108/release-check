@@ -108,7 +108,7 @@ async function checkCommits(github, context, extras) {
 
     console.log(JSON.stringify(context, null, "  "));
     console.log(`owner ${owner} repo ${repo}`);
-    console.log(`before${base}`);
+    console.log(`before ${base}`);
     console.log(`after ${head}`);
 
     const changeLog = await github.repos.compareCommits({

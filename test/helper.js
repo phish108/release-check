@@ -258,17 +258,17 @@ describe( "basic functions", function() {
         const after = "549f664e05adf6e99059f2a3cfb0714ee79b8cd2";
 
         const ctx = {
-            repo:  {
-                name: "release-check",
-                owner: {
-                    name: "phish108"
-                }
-            },
             payload: {
+                repository: {
+                    name: "release-check",
+                    owner: {
+                        name: "phish108"
+                    }
+                },
                 before,
                 after
             }
-        }; 
+        };
 
         const result = await helper.checkCommits(github, ctx, {protected_extra: null});
 
@@ -286,17 +286,17 @@ describe( "basic functions", function() {
         const after = "9ec94671b6dc158bdc4bc5aa2845a37ecd49e666";
 
         const ctx = {
-            repo:  {
-                name: "release-check",
-                owner: {
-                    name: "phish108"
-                }
-            },
             payload: {
+                repository: {
+                    name: "release-check",
+                    owner: {
+                        name: "phish108"
+                    }
+                },
                 before,
                 after
             }
-        }; 
+        };
 
         const result = await helper.checkCommits(github, ctx, {});
 
@@ -315,17 +315,17 @@ describe( "basic functions", function() {
         const after = "77690f5b371216de3dcf3280a561d6b126e0575f";
 
         const ctx = {
-            repo:  {
-                name: "release-check",
-                owner: {
-                    name: "phish108"
-                }
-            },
             payload: {
+                repository: {
+                    name: "release-check",
+                    owner: {
+                        name: "phish108"
+                    }
+                },
                 before,
                 after
             }
-        }; 
+        };
 
         const result = await helper.checkCommits(github, ctx, {protected_extra: null});
 
@@ -344,17 +344,17 @@ describe( "basic functions", function() {
         const after = "b172b03f9c68c425a2d43c2019849e37dbc34dad";
 
         const ctx = {
-            repo:  {
-                name: "release-check",
-                owner: {
-                    name: "phish108"
-                }
-            },
             payload: {
+                repository: {
+                    name: "release-check",
+                    owner: {
+                        name: "phish108"
+                    }
+                },
                 before,
                 after
             }
-        }; 
+        };
 
         const result = await helper.checkCommits(github, ctx, {protected_extra: null});
 
@@ -373,13 +373,13 @@ describe( "basic functions", function() {
         const after = "9bcd1b75dd8e77d3fa69c6713636c83e6ed4b814";
 
         const ctx = {
-            repo: {
-                name: "release-check",
-                owner: {
-                    name: "phish108"
-                }
-            },
             payload: {
+                repository: {
+                    name: "release-check",
+                    owner: {
+                        name: "phish108"
+                    }
+                },
                 before,
                 after
             }

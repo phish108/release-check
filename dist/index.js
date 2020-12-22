@@ -2,106 +2,7 @@ module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 932:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-const core   = __webpack_require__(186);
-const githubAction = __webpack_require__(438);
-
-const protected_defaults = [
-    ".github/",
-    "tests/",
-    "test/",
-    ".gitignore"
-];
-
-async function action() {
-    const token = core.getInput("github-token", {required: true});
-
-    const github = new githubAction.getOctokit(token);
-
-    const changeLog = await github.request(githubAction.context.payload.repository.compare_url, {
-        base: githubAction.context.payload.before,
-        head: githubAction.context.payload.after
-    });
-
-    const files = changeLog.data.files.map(file => file.filename);
-
-    const protected_extra = core.getInput("protected-paths", {required: false});
-
-    const protected_array = protected_extra ? protected_extra.split(/[\s\n\r]+/) : [];
-
-    const protected_paths = protected_defaults.concat(protected_array);
-
-    core.info(JSON.stringify(protected_paths));
-
-    // check normal protected files
-    const hold_protected = files
-        .map((file) => protected_paths
-            .map((path) => file.startsWith(path))
-            .reduce((v, c) => v || c, false))
-        .reduce((v, c) => v && c, true);
-
-    core.info(`protected directories? ${ hold_protected }`);
-
-    // check if package files changed
-    const hold_package = files
-        .map((file) => file === "package.json" ||
-                      file === "package-lock.json")
-        .reduce((v, c) => v || c, false);
-
-    let isdevChange = 0;
-
-    let isotherChange = 0;
-
-    if (hold_package) {
-        core.info("check for changed development dependencies");
-        const pInfo = changeLog.data.files
-            .filter((file) => file.filename === "package.json");
-
-        const pFile = await github.request(pInfo[0].raw_url);
-        const devDeps = Object.keys(JSON.parse(pFile.data).devDependencies);
-
-        const changes = pInfo[0].patch
-            .split("\n")
-            .filter((change) => change.match(/^[+-]\s*/))
-            .map((change) => change.replace(/^[+-]\s*"([^"]+).*$/, "$1"))
-            .filter((change) => change && change.length);
-
-        isdevChange = changes
-            .filter((change) => devDeps.includes(change))
-            .length;
-
-        isotherChange = changes.length - isdevChange;
-
-        core.info(`changed devDependencies ${ isdevChange }`);
-        core.info(`changed other dependencies ${ isotherChange }`);
-    }
-
-    const res_protected = hold_protected && isotherChange === 0;
-    const res_development = isdevChange > 0 && isotherChange === 0;
-
-    core.info(`hold protected: ${ res_protected }`);
-    core.info(`hold development: ${ res_development }`);
-
-    core.setOutput("hold_protected", res_protected);
-
-    if (res_development) {
-        core.info("is dev only change. HOLD!");
-    }
-
-    core.setOutput("hold_development", res_development);
-    core.setOutput("proceed", !(res_protected || res_development));
-}
-
-action()
-    .then(() => core.info("success"))
-    .catch(error => core.setFailed(error.message));
-
-
-/***/ }),
-
-/***/ 351:
+/***/ 241:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -209,7 +110,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const command_1 = __webpack_require__(351);
+const command_1 = __webpack_require__(241);
 const file_command_1 = __webpack_require__(717);
 const utils_1 = __webpack_require__(278);
 const os = __importStar(__webpack_require__(87));
@@ -3357,7 +3258,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var deprecation = __webpack_require__(481);
+var deprecation = __webpack_require__(932);
 var once = _interopDefault(__webpack_require__(223));
 
 const logOnce = once(deprecation => console.warn(deprecation));
@@ -3742,7 +3643,7 @@ function removeHook (state, name, method) {
 
 /***/ }),
 
-/***/ 481:
+/***/ 932:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -5868,6 +5769,208 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 989:
+/***/ ((module) => {
+
+const protected_defaults = [
+    ".github/",
+    "tests/",
+    "test/",
+    ".gitignore"
+];
+
+function prepareProtectedPaths(extraString) {
+    let extraPaths = [];
+
+    if (extraString) {
+        extraPaths = extraString.split(/[\s\n\r]+/);
+    }
+
+    if (protected_defaults) {
+        extraPaths = protected_defaults.concat(extraPaths);
+    }
+
+    return extraPaths;
+}
+
+function _reduceOr(value, carry) {
+    return value || carry;
+}
+
+function _reduceAnd(value, carry) {
+    return value && carry;
+}
+
+function checkItemInArrayPattern(item, patterns) {
+    let is_in_path = patterns.map((pattern) => item.startsWith(pattern));
+
+    return is_in_path.reduce(_reduceOr, false);
+}
+
+function itemsInArray(items, array) {
+    return items
+        .filter((item) => array.includes(item))
+        .length;
+}
+
+function checkItemsInArray(items, array, all = false) {
+    const nItems = itemsInArray(items, array);
+
+    if (all) {
+        return nItems === items.length;
+    }
+
+    return nItems > 0;
+}
+
+function checkOnlyPaths(fileNames, paths) {
+    let is_path = fileNames.map((file) => checkItemInArrayPattern(file, paths));
+
+    return is_path.reduce(_reduceAnd, true);
+}
+
+function checkNpmFiles(fileNames) {
+    const paths = [
+        "package.json",
+        "package-lock.json"
+    ];
+
+    return checkItemsInArray(fileNames, paths);
+}
+
+function checkOnlyHoldPaths(fileNames, paths) {
+    paths = paths.concat([
+        "package.json",
+        "package-lock.json"
+    ]);
+
+    return checkOnlyPaths(fileNames, paths);
+}
+
+function prepareJsonDiff(diffString) {
+    const changes = diffString.split("\n");
+
+    return changes
+        .filter((change) => change.match(/^[+-]\s*"/))
+        .map((change) => change.replace(/^[+-]\s*"([^"]+).*$/, "$1"));
+}
+
+function extractDevDependencies(packageJSON) {
+    if ( typeof packageJSON === "string" ) {
+        packageJSON = JSON.parse(packageJSON);
+    }
+
+    if (! packageJSON || ! packageJSON.devDependencies) {
+        return [];
+    }
+
+    return Object.keys(packageJSON.devDependencies);
+}
+
+function checkChangesOnlyInDevDependencies(diff, packageJSON) {
+    const changes      = prepareJsonDiff(diff);
+    const dependencies = extractDevDependencies(packageJSON);
+
+    return checkItemsInArray(changes, dependencies, true);
+}
+
+async function checkCommits(github, context, extras) {
+    const base = context.payload.before;
+    const head = context.payload.after;
+    const owner = context.owner;
+    const repo = context.repo;
+
+    const changeLog = await github.repos.compareCommits({
+        owner,
+        repo,
+        base,
+        head
+    });
+
+    const files = changeLog.data.files
+        .map(file => file.filename);
+
+    const protected_paths = prepareProtectedPaths(protected_defaults,
+                                                  extras.protected_extra);
+
+    // check normal protected files
+    let hold_protected = checkOnlyPaths(files,
+                                        protected_paths);
+
+    // check if package files changed
+    const hold_package = checkNpmFiles(files);
+
+    let hold_development = false;
+
+    if (hold_package) {
+        const pInfo = changeLog.data.files
+            .filter((file) => file.filename === "package.json");
+
+        const pFile = await github.request(pInfo[0].raw_url);
+
+        hold_development = checkChangesOnlyInDevDependencies(pInfo[0].patch,
+                                                             pFile.data);
+    }
+
+    if (hold_development) {
+        hold_protected = checkOnlyHoldPaths(files, protected_paths);
+    }
+
+    return {
+        hold_development,
+        hold_protected,
+        proceed: !hold_protected
+    };
+}
+
+module.exports = {
+    checkCommits,
+    prepareProtectedPaths,
+    checkOnlyPaths,
+    checkOnlyHoldPaths,
+    checkNpmFiles,
+    checkChangesOnlyInDevDependencies,
+    prepareJsonDiff
+};
+
+
+
+
+/***/ }),
+
+/***/ 351:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+const core   = __webpack_require__(186);
+const githubAction = __webpack_require__(438);
+const {checkCommits} = __webpack_require__(989);
+
+async function action() {
+    const token = core.getInput("github-token", {required: true});
+    const protected_extra = core.getInput("protected-paths", {required: false});
+
+    const github = new githubAction.getOctokit(token);
+
+    const result = await checkCommits(github,
+                                      core,
+                                      githubAction.context,
+                                      {protected_extra});
+
+    core.info(`hold protected: ${ result.hold_protected }`);
+    core.info(`hold development: ${ result.hold_development }`);
+
+    core.setOutput("hold_protected", result.hold_protected);
+    core.setOutput("hold_development", result.hold_development);
+    core.setOutput("proceed", result.proceed);
+}
+
+action()
+    .then(() => core.info("success"))
+    .catch(error => core.setFailed(error.message));
+
+
+/***/ }),
+
 /***/ 877:
 /***/ ((module) => {
 
@@ -6018,6 +6121,6 @@ module.exports = require("zlib");;
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(932);
+/******/ 	return __webpack_require__(351);
 /******/ })()
 ;

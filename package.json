@@ -4,9 +4,9 @@
   "description": "Check if a push or pull request should trigger a release.",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "eslint index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "package": "ncc build index.js -o dist"
+    "test": "mocha --exit",
+    "lint": "eslint src/*",
+    "package": "ncc build src/index.js -o dist"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,9 @@
   "homepage": "https://github.com/phish108/release-check#readme",
   "dependencies": {
     "@actions/core": "1.2.6",
-    "@actions/github": "4.0.0"
+    "@actions/github": "4.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
   },
   "devDependencies": {
     "@vercel/ncc": "0.26.0",

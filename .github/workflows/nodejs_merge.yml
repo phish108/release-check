@@ -60,14 +60,14 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.8
+      uses: phish108/release-check@1.0.9
       with:
         protected-paths: | 
           README.md
           .eslintrc
           LICENSE
           action.yml
-          
+
     - uses: actions/checkout@v2
     - run: |
         git config --local user.email "cpglahn@gmail.com"
@@ -102,7 +102,7 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.8
+      uses: phish108/release-check@1.0.9
       with:
         protected-paths: | 
           README.md

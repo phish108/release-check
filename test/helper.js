@@ -259,7 +259,7 @@ describe( "basic functions", function() {
 
         const ctx = {
             repo:  {
-                name:"release-check",
+                name: "release-check",
                 owner: {
                     name: "phish108"
                 }
@@ -287,7 +287,7 @@ describe( "basic functions", function() {
 
         const ctx = {
             repo:  {
-                name:"release-check",
+                name: "release-check",
                 owner: {
                     name: "phish108"
                 }
@@ -316,7 +316,7 @@ describe( "basic functions", function() {
 
         const ctx = {
             repo:  {
-                name:"release-check",
+                name: "release-check",
                 owner: {
                     name: "phish108"
                 }
@@ -345,7 +345,7 @@ describe( "basic functions", function() {
 
         const ctx = {
             repo:  {
-                name:"release-check",
+                name: "release-check",
                 owner: {
                     name: "phish108"
                 }
@@ -373,8 +373,8 @@ describe( "basic functions", function() {
         const after = "9bcd1b75dd8e77d3fa69c6713636c83e6ed4b814";
 
         const ctx = {
-            repo:  {
-                name:"release-check",
+            repo: {
+                name: "release-check",
                 owner: {
                     name: "phish108"
                 }

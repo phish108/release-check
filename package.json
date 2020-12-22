@@ -1,6 +1,6 @@
 {
   "name": "release-check",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Check if a push or pull request should trigger a release.",
   "main": "dist/index.js",
   "scripts": {

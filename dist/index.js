@@ -5957,6 +5957,8 @@ async function action() {
     const token = core.getInput("github-token", {required: true});
     const protected_extra = core.getInput("protected-paths", {required: false});
 
+    core.info("start");
+
     const github = githubAction.getOctokit(token);
 
     const result = await checkCommits(github,
@@ -5969,6 +5971,8 @@ async function action() {
     core.setOutput("hold_protected", result.hold_protected);
     core.setOutput("hold_development", result.hold_development);
     core.setOutput("proceed", result.proceed);
+
+    core.info("done");
 }
 
 action()

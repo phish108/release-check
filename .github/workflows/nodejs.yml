@@ -110,7 +110,7 @@ jobs:
           action.yml
 
     - id: tagger
-      if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed }== 'true' }
+      if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed }== 'true' }}
       uses: phish108/autotag-action@1.1.31
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}

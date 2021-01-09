@@ -64,11 +64,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: automerge
-      uses: "pascalgn/automerge-action@v0.13.0"
-      env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        MERGE_LABELS: ""
+    - run: echo "nothing to do"
+    # - name: automerge
+    #   uses: "pascalgn/automerge-action@v0.13.0"
+    #  env:
+    #    GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    #    MERGE_LABELS: ""
 
   build:
     needs:

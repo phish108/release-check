@@ -5883,8 +5883,8 @@ async function checkCommits(github, context, extras) {
     let changeLog;
 
     console.log(JSON.stringify(context, null, 2));
-    console.log(JSON.stringify(context.payload.before));
-    console.log(JSON.stringify(context.payload.after));
+    console.log(head);
+    console.log(base);
 
     console.log(owner);
     console.log(repo);

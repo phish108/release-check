@@ -116,6 +116,7 @@ async function checkCommits(github, context, extras) {
     console.log(repo);
 
     try {
+        // get the actual differences between the elements
         changeLog = await github.repos.compareCommits({
             owner,
             repo,

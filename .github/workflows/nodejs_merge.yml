@@ -35,9 +35,29 @@ jobs:
       env:
         CI: "true"
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-   
+  
+  prep:
+    needs:
+    - lint
+
+    if: github.actor == 'phish108' || startsWith(github.actor, 'dependabot')
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: check changes
+      id: release
+      uses: phish108/release-check@main
+      with:
+        protected-paths: | 
+          README.md
+          .eslintrc
+          LICENSE
+          action.yml
+
   merge: 
-    needs: test
+    needs: 
+    - prep
+    - test
     if: github.actor == 'phish108' ||  startsWith(github.actor, 'dependabot')
     
     runs-on: ubuntu-latest

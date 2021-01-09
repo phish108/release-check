@@ -5882,12 +5882,12 @@ async function checkCommits(github, context, extras) {
 
     let changeLog;
 
-    console.log(JSON.stringify(context, null, 2));
-    console.log(head);
-    console.log(base);
+    // console.log(JSON.stringify(context, null, 2));
+    // console.log(head);
+    // console.log(base);
 
-    console.log(owner);
-    console.log(repo);
+    // console.log(owner);
+    // console.log(repo);
 
     try {
         if (context.payload.pull_request) {
@@ -5908,7 +5908,7 @@ async function checkCommits(github, context, extras) {
         }
     }
     catch (err) {
-        console.log("fail to compare the context commits");
+        console.log("failed to compare the context commits");
 
         throw err;
     }

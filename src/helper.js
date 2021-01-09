@@ -108,7 +108,7 @@ async function checkCommits(github, context, extras) {
 
     let changeLog;
 
-    console.log(JSON.stringify(context, null, 2);
+    console.log(JSON.stringify(context, null, 2));
 
     try {
         changeLog = await github.repos.compareCommits({

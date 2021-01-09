@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - id: release
-      uses: phish108/release-check@1.0.9-main.3
+      uses: phish108/release-check@1.0.10-main.3
       with: 
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - id: release
-      uses: phish108/release-check@1.0.9-main.3
+      uses: phish108/release-check@1.0.10-main.3
       with: 
         github-token: ${{ secrets.GITHUB_TOKEN }}
         protected-paths: | 

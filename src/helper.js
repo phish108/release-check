@@ -106,12 +106,27 @@ async function checkCommits(github, context, extras) {
     const owner = context.payload.repository.owner.name;
     const repo = context.payload.repository.name;
 
-    const changeLog = await github.repos.compareCommits({
-        owner,
-        repo,
-        base,
-        head
-    });
+    let changeLog;
+
+    console.log(JSON.stringify(context, null, 2);
+
+    try {
+        changeLog = await github.repos.compareCommits({
+            owner,
+            repo,
+            base,
+            head
+        });
+    }
+    catch (err) {
+        console.log("fail to compare the context commits");
+
+        return {
+            hold_development: true,
+            hold_protected: true,
+            proceed: false
+        };
+    }
 
     const files = changeLog.data.files
         .map(file => file.filename);
@@ -140,7 +155,21 @@ async function checkCommits(github, context, extras) {
         const pInfo = changeLog.data.files
             .filter((file) => file.filename === "package.json");
 
-        const pFile = await github.request(pInfo[0].raw_url);
+        let pFile;
+
+        try {
+            pFile = await github.request(pInfo[0].raw_url);
+        }
+        catch (err) {
+            // commonly a 404
+            console.log("fail to get raw package.json");
+
+            return {
+                hold_development: true,
+                hold_protected: true,
+                proceed: false
+            };
+        }
 
         hold_development = checkChangesOnlyInDevDependencies(pInfo[0].patch,
                                                              pFile.data);

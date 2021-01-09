@@ -5875,9 +5875,9 @@ function checkChangesOnlyInDevDependencies(diff, packageJSON) {
 }
 
 async function checkCommits(github, context, extras) {
-    const base = context.payload.before;
-    const head = context.payload.after;
-    const owner = context.payload.repository.owner.name;
+    const base = context.payload.before || context.payload.pull_request.base.sha;
+    const head = context.payload.after  || context.payload.pull_request.head.sha;
+    const owner = context.payload.repository.owner.name || context.payload.repository.owner.login;
     const repo = context.payload.repository.name;
 
     let changeLog;
@@ -5890,12 +5890,22 @@ async function checkCommits(github, context, extras) {
     console.log(repo);
 
     try {
-        changeLog = await github.repos.compareCommits({
-            owner,
-            repo,
-            base,
-            head
-        });
+        if (context.payload.pull_request) {
+            changeLog = await github.repos.compareCommits({
+                owner,
+                repo,
+                base,
+                head
+            });
+        }
+        else {
+            changeLog = await github.repos.compareCommits({
+                owner,
+                repo,
+                base,
+                head
+            });
+        }
     }
     catch (err) {
         console.log("fail to compare the context commits");

@@ -5883,6 +5883,11 @@ async function checkCommits(github, context, extras) {
     let changeLog;
 
     console.log(JSON.stringify(context, null, 2));
+    console.log(JSON.stringify(context.payload.before));
+    console.log(JSON.stringify(context.payload.after));
+
+    console.log(owner);
+    console.log(repo);
 
     try {
         changeLog = await github.repos.compareCommits({
@@ -5895,11 +5900,7 @@ async function checkCommits(github, context, extras) {
     catch (err) {
         console.log("fail to compare the context commits");
 
-        return {
-            hold_development: true,
-            hold_protected: true,
-            proceed: false
-        };
+        throw err;
     }
 
     const files = changeLog.data.files
@@ -5938,11 +5939,7 @@ async function checkCommits(github, context, extras) {
             // commonly a 404
             console.log("fail to get raw package.json");
 
-            return {
-                hold_development: true,
-                hold_protected: true,
-                proceed: false
-            };
+            throw err;
         }
 
         hold_development = checkChangesOnlyInDevDependencies(pInfo[0].patch,
@@ -5983,24 +5980,36 @@ const githubAction = __webpack_require__(438);
 const {checkCommits} = __webpack_require__(989);
 
 async function action() {
+    core.info("init parameter");
     const token = core.getInput("github-token", {required: true});
     const protected_extra = core.getInput("protected-paths", {required: false});
 
-    // core.info("start");
+    core.info("start");
 
     const github = githubAction.getOctokit(token);
 
-    const result = await checkCommits(github,
-                                      githubAction.context,
-                                      {protected_extra});
+    try{
+        const result = await checkCommits(github,
+                                          githubAction.context,
+                                          {
+                                              protected_extra
+                                          });
 
-    core.info(`hold protected: ${ result.hold_protected }`);
-    core.info(`hold development: ${ result.hold_development }`);
-    core.info(`proceed: ${ result.proceed }`);
+        core.info(`hold protected: ${ result.hold_protected }`);
+        core.info(`hold development: ${ result.hold_development }`);
+        core.info(`proceed: ${ result.proceed }`);
 
-    core.setOutput("hold_protected", result.hold_protected);
-    core.setOutput("hold_development", result.hold_development);
-    core.setOutput("proceed", result.proceed);
+        core.setOutput("hold_protected", result.hold_protected);
+        core.setOutput("hold_development", result.hold_development);
+        core.setOutput("proceed", result.proceed);
+    }
+    catch(err) {
+        core.info("request failure");
+
+        core.setOutput("hold_protected", true);
+        core.setOutput("hold_development", true);
+        core.setOutput("proceed", false);
+    }
 
     core.info("done");
 }

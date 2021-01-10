@@ -74,15 +74,20 @@ jobs:
           LICENSE
           action.yml
 
+    # Everything from this point onwards is only applied for non-dev changes
+    
     - uses: actions/checkout@v2
+      if: ${{ steps.release.outputs.proceed == 'true' }}
       with: 
         ref: main
   
-    - run: |
+    - if: ${{ steps.release.outputs.proceed == 'true' }}
+      run: |
         git config --local user.email "cpglahn@gmail.com"
         git config --local user.name "Christian Glahn"
         
     - name: Use Node.js 12
+      if: ${{ steps.release.outputs.proceed == 'true' }}
       uses: actions/setup-node@v1
       with:
         node-version: 12
@@ -96,7 +101,7 @@ jobs:
         GITSHA: ${{ github.sha }}
 
     - name: Push changes
-      if: ${{ steps.release.outputs.proceed }}
+      if: ${{ steps.release.outputs.proceed == 'true' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -137,14 +142,17 @@ jobs:
         dry-run: 'TRUE'
 
     - uses: actions/checkout@v2
+      if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true' }}
       with: 
         ref: main
 
-    - run: |
+    - if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true' }}
+      run: |
         git config --local user.email "cpglahn@gmail.com"
         git config --local user.name "Christian Glahn"
 
     - name: Use Node.js 12
+      if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true' }}
       uses: actions/setup-node@v1
       with:
         node-version: 12

@@ -136,7 +136,7 @@ jobs:
 
     - id: tagger
       if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true' }}
-      uses: phish108/autotag-action@1.1.55
+      uses: phish108/autotag-action@1.1.56
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         dry-run: 'TRUE'
@@ -173,7 +173,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
 
-    - uses: phish108/autotag-action@1.1.55
+    - uses: phish108/autotag-action@1.1.56
       if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true'  }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}

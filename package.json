@@ -1,6 +1,6 @@
 {
   "name": "release-check",
-  "version": "1.0.11",
+  "version": "1.0.13",
   "description": "Check if a push or pull request should trigger a release.",
   "main": "dist/index.js",
   "scripts": {
@@ -20,15 +20,15 @@
   },
   "homepage": "https://github.com/phish108/release-check#readme",
   "dependencies": {
-    "@actions/core": "1.2.6",
-    "@actions/github": "4.0.0"
+    "@actions/core": "1.10.0",
+    "@actions/github": "5.1.1"
   },
   "devDependencies": {
     "@vercel/ncc": "0.36.0",
     "babel-eslint": "10.1.0",
+    "chai": "4.3.7",
     "eslint": "7.21.0",
     "eslint-plugin-babel": "5.3.1",
-    "chai": "4.3.7",
     "mocha": "10.2.0"
   }
 }

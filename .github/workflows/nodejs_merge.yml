@@ -66,7 +66,7 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.12
+      uses: phish108/release-check@1.0.13
       with:
         protected-paths: | 
           README.md
@@ -116,7 +116,7 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.12
+      uses: phish108/release-check@1.0.13
       with:
         protected-paths: | 
           README.md
@@ -141,7 +141,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         dry-run: 'TRUE'
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true' }}
       with: 
         ref: main
@@ -151,11 +151,11 @@ jobs:
         git config --local user.email "cpglahn@gmail.com"
         git config --local user.name "Christian Glahn"
 
-    - name: Use Node.js 12
+    - name: Use Node.js 16
       if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true' }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: 12
+        node-version: 16
     
     - if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true' }}
       run: | 
@@ -173,7 +173,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
 
-    - uses: phish108/autotag-action@1.1.31
+    - uses: phish108/autotag-action@1.1.55
       if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true'  }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}

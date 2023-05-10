@@ -3,6 +3,7 @@
   "version": "1.0.13",
   "description": "Check if a push or pull request should trigger a release.",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "test": "mocha --exit",
     "lint": "eslint src/*",
@@ -24,11 +25,13 @@
     "@actions/github": "5.1.1"
   },
   "devDependencies": {
+    "@eslint/js": "8.40.0",
     "@vercel/ncc": "0.36.0",
     "babel-eslint": "10.1.0",
     "chai": "4.3.7",
-    "eslint": "7.21.0",
+    "eslint": "8.40.0",
     "eslint-plugin-babel": "5.3.1",
+    "globals": "13.20.0",
     "mocha": "10.2.0"
   }
 }

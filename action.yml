@@ -20,5 +20,5 @@ outputs:
   hold_protected:
     description: 'If true, the changes affect only protected files and directories'
 runs:
-  using: node18
+  using: node16
   main: 'dist/index.js'

@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: 14
+        node-version: 16
     - run: | 
         npm ci
         npm run lint
@@ -26,11 +26,11 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 12
-      uses: actions/setup-node@v1
+    - uses: actions/checkout@v3
+    - name: Use Node.js 16
+      uses: actions/setup-node@v3
       with:
-        node-version: 12
+        node-version: 16
     - run: |
         npm ci
         npm test
@@ -47,10 +47,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     # - run: echo "nothing to do"
     - name: automerge
-      uses: "pascalgn/automerge-action@v0.13.0"
+      uses: "pascalgn/automerge-action@v0.15.6"
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         MERGE_LABELS: ""
@@ -66,7 +66,7 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.11
+      uses: phish108/release-check@1.0.12
       with:
         protected-paths: | 
           README.md
@@ -76,7 +76,7 @@ jobs:
 
     # Everything from this point onwards is only applied for non-dev changes
     
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       if: ${{ steps.release.outputs.proceed == 'true' }}
       with: 
         ref: main
@@ -86,11 +86,11 @@ jobs:
         git config --local user.email "cpglahn@gmail.com"
         git config --local user.name "Christian Glahn"
         
-    - name: Use Node.js 12
+    - name: Use Node.js 16
       if: ${{ steps.release.outputs.proceed == 'true' }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: 12
+        node-version: 16
     
     - run: | 
         npm ci
@@ -116,7 +116,7 @@ jobs:
     steps:
     - name: check changes
       id: release
-      uses: phish108/release-check@1.0.11
+      uses: phish108/release-check@1.0.12
       with:
         protected-paths: | 
           README.md
@@ -136,7 +136,7 @@ jobs:
 
     - id: tagger
       if: ${{ steps.release.outputs.proceed == 'true' && steps.releaseMain.outputs.proceed == 'true' }}
-      uses: phish108/autotag-action@1.1.31
+      uses: phish108/autotag-action@1.1.55
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         dry-run: 'TRUE'
